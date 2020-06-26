@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Regression Suite">
+    <test name="RestAssured Test">
+        <classes>
+            <class name="com.weather.statuses.WeatherWorkflowTest"></class>
+        </classes>
+    </test>
+</suite>
