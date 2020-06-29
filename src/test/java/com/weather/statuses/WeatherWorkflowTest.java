@@ -5,11 +5,13 @@ import com.weather.constants.Auth;
 import com.weather.constants.EndPoints;
 import com.weather.constants.Path;
 import com.weather.models.StationAddModel;
+import com.weather.utilities.ExcelUtility;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 
@@ -25,16 +27,23 @@ public class WeatherWorkflowTest extends StationAddModel {
         reqSpec = RestUtilities.getRequestSpecification();
         reqSpec.basePath(Path.STATUSES);
         resSpec = RestUtilities.getResponseSpecification();
+        ExcelUtility.setExcelFile(Path.EXCEL_FILE, "AllTests");
     }
 
-    @Test
-    public void postStation() {
+    @DataProvider(name = "addStation")
+    public Object[][] getaddStation(){
+        Object[][] testData = ExcelUtility.getTestData("add_station");
+        return testData;
+    }
+
+    @Test(dataProvider = "addStation")
+    public void postStation(String externalId, String name, String latitude, String longitude, String altitude) {
         StationAddModel stations = new StationAddModel();
-        stations.setExternal_id("ANM_TES001");
-        stations.setName("Anz Updated Station");
-        stations.setLatitude(35.80);
-        stations.setLongitude(122.47);
-        stations.setAltitude(143);
+        stations.setExternal_id(externalId);
+        stations.setName(name);
+        stations.setLatitude(Double.valueOf(latitude));
+        stations.setLongitude(Double.valueOf(longitude));
+        stations.setAltitude(Integer.valueOf(altitude));
         Response response =
                 given()
                         .spec(RestUtilities.setBody(reqSpec,stations))
